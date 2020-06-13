@@ -3,7 +3,7 @@ const { Unprocessable } = require("@feathersjs/errors");
 // Create a joi validation schema
 const typeToken = Joi.number().integer().min(100000).max(999999).required();
 
-module.exports = (options = {}) => {
+module.exports = () => {
   return async (context) => {
     if (!context.data.action || context.data.action !== "verifyEmail") {
       return context;
@@ -33,15 +33,11 @@ module.exports = (options = {}) => {
     }
 
     if (token.invalid === true) {
-      if (token.delivered === true) {
+      if (token.expired === true) {
         context.result = new Unprocessable("Verification token is expired");
       } else {
         context.result = new Unprocessable("Verification token is invalid");
       }
-      return context;
-    }
-    if (token.used === true) {
-      context.result = new Unprocessable("Your account is already verified");
       return context;
     }
     let matches = token.verifyToken.toString() === verifyToken;

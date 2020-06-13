@@ -1,7 +1,7 @@
 // const { authenticate } = require('@feathersjs/authentication').hooks;
-const { Unprocessable } = require("@feathersjs/errors");
 const validate = require("../../hooks/validate");
 const verifyEmail = require("../../hooks/verifyEmail");
+const sendApplicationId = require("../../hooks/sendApplicationId");
 
 module.exports = {
   before: {
@@ -27,7 +27,7 @@ module.exports = {
       },
     ],
     update: [],
-    patch: [],
+    patch: [sendApplicationId()],
     remove: [],
   },
 

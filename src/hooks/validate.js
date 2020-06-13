@@ -11,7 +11,7 @@ const trimmed = (data) => {
   return clean;
 };
 
-module.exports = (options = {}) => {
+module.exports = () => {
   return async (context) => {
     const { error, value } = application.validate(trimmed(context.data));
     if (error) {

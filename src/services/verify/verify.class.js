@@ -3,7 +3,7 @@ const { Service } = require("feathers-nedb");
 exports.Verify = class Verify extends Service {
   static options() {
     return {
-      maxAge: 48000,
+      maxAge: 480000,
       maxRequest: 3,
       maxAttempts: 3,
     };
