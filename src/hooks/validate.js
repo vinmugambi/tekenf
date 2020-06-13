@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+const { BadRequest } = require("@feathersjs/errors");
 
 // Create a joi validation schema
 const application = Joi.object({
@@ -15,7 +16,8 @@ module.exports = () => {
   return async (context) => {
     const { error, value } = application.validate(trimmed(context.data));
     if (error) {
-      throw new Error(error);
+      context.result = new BadRequest("Email must be provided");
+      return context;
     }
     context.data = {
       ...value,
