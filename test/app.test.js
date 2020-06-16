@@ -64,3 +64,4 @@ describe("Feathers application tests", () => {
     });
   });
 });
+

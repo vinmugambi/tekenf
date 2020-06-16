@@ -14,14 +14,11 @@ const getGravatar = (email) => {
 
 exports.Users = class Users extends Service {
   create(data, params) {
-    const { email, password, githubId, name } = data;
+    const { email } = data;
     const avatar = data.avatar || getGravatar(email);
 
     const userData = {
-      email,
-      name,
-      password,
-      githubId,
+      ...data,
       avatar,
     };
 

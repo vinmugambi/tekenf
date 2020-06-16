@@ -1,13 +1,11 @@
 const { MethodNotAllowed, BadRequest } = require("@feathersjs/errors");
-// const {disallow}=require("feathers-hooks-common");
+const { disallow } = require("feathers-hooks-common");
 const { Verify } = require("./verify.class");
-
-const email = require("../../hooks/email");
 
 module.exports = {
   before: {
     all: [
-      // disallow('external'),
+      disallow("external"),
       async (context) => {
         // Disallow unused database adapters
         const allowedMethods = ["get", "patch", "create", "remove", "find"];
@@ -54,11 +52,14 @@ module.exports = {
         }, Verify.options().maxAge);
       },
       async (context) => {
-        await email(
-          context.result.email,
-          "Email verification code",
-          `Your email verification code is: ${context.result.verifyToken}`
-        );
+        context.app
+          .service("mailer")
+          .create({
+            to: context.result.email,
+            subject: "Email verification code",
+            text: `Your email verification code is: ${context.result.verifyToken}`,
+            from: "ford20@ethereal.com",
+          });
         context.dispatch = { message: "verification email sent" };
         return context;
       },
