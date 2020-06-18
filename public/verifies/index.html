@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify your email address</title>
+  </head>
+  <body>
+    <p id = "info">
+        Sending token
+      </p>
+    <script>
+      var url = new URL(window.location.href);
+      var token = url.searchParams.get("token");
+
+      var verify = {
+        action: "verifySignupLong",
+        value: token,
+      };
+
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 201) {
+          document.getElementById("info").innerHTML =
+            "Verification Successful for action <b>" +
+            verify.action +
+            "</b> and token <b>" +
+            verify.value +
+            "</b>";
+        } else {
+          document.getElementById("info").innerHTML = xhttp.response;
+        }
+      };
+      xhttp.open("POST", "http://localhost:3030/authmanagement", true);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(JSON.stringify(verify));
+    </script>
+  </body>
+</html>
