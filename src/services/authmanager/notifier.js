@@ -20,7 +20,7 @@ module.exports = function (app) {
       let email;
       switch (type) {
       case "resendVerifySignup": //sending the user the verification email
-        tokenLink = getLink("verify", user.verifyToken);
+        tokenLink = getLink("verifies", user.verifyToken);
         email = {
           from: process.env.FROM_EMAIL,
           to: user.email,

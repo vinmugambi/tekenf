@@ -1,12 +1,20 @@
-// const { authenticate } = require('@feathersjs/authentication').hooks;
+const { authenticate } = require("@feathersjs/authentication").hooks;
 const validate = require("../../hooks/validate");
 const verifyEmail = require("../../hooks/verifyEmail");
+const allowAnonymous = require("../../hooks/allowAnonymous");
 const sendApplicationId = require("../../hooks/sendApplicationId");
 
 module.exports = {
   before: {
     // all: [ authenticate('jwt') ],
-    all: [],
+    all: [
+      allowAnonymous(),
+      authenticate("jwt", "anonymous"),
+      (context) => {
+        console.log(context.params);
+        return context;
+      },
+    ],
     find: [],
     get: [],
     create: [validate()],
