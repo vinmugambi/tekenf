@@ -1,42 +1,56 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
-const verifyHooks = require("feathers-authentication-management").hooks;
-const accountService = require("../authmanager/notifier");
-
+const {
+  iff,
+  isProvider,
+  preventChanges,
+  when} = require("feathers-hooks-common");
 const {
   hashPassword, protect
 } = require("@feathersjs/authentication-local").hooks;
 
+const preventVerificationPropertyChanges = iff(
+  isProvider("external"),
+  preventChanges(
+    "isVerified",
+    "verifyToken",
+    "verifyShortToken",
+    "verifyExpires",
+    "verifyChanges",
+    "resetToken",
+    "resetShortToken",
+    "resetExpires"
+  )
+);
+
+const restrict = [authenticate("jwt")];
+
 module.exports = {
   before: {
     all: [],
-    find: [ authenticate("jwt") ],
-    get: [ authenticate("jwt") ],
+    // find: [...restrict],
+    get: [...restrict],
     create: [
-      hashPassword("password"),
-      verifyHooks.addVerification()
+      async (context) => {
+        context.data = { ...context.data, password: "GeneratedPassword" };
+        return context;
+      },
+      hashPassword("magic"),
     ],
-    update: [ hashPassword("password"),  authenticate("jwt") ],
-    patch: [ hashPassword("password"),  authenticate("jwt") ],
-    remove: [ authenticate("jwt") ]
+    update: [...restrict, preventVerificationPropertyChanges],
+    patch: [...restrict, preventVerificationPropertyChanges],
+    remove: [...restrict],
   },
 
   after: {
-    all: [
-      // Make sure the password field is never sent to the client
-      // Always must be the last hook
-      protect("password")
-    ],
+    all: [when((hook) => hook.params.provider, 
+      protect("password","magic")
+    )],
     find: [],
-    get: [],
-    create: [
-      context => {
-        accountService(context.app).notifier("resendVerifySignup", context.result);
-      },
-      verifyHooks.removeVerification()
-    ],
+    get: [iff(isProvider("external"))],
+    create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -46,6 +60,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

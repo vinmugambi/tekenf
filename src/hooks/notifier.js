@@ -1,4 +1,4 @@
-module.exports = function (app) {
+module.exports = function configureNotifier (app) {
   const FROM_EMAIL = "ford20@ethereal.com";
 
   function getLink(type, hash) {
@@ -22,7 +22,7 @@ module.exports = function (app) {
       case "resendVerifySignup": //sending the user the verification email
         tokenLink = getLink("verifies", user.verifyToken);
         email = {
-          from: process.env.FROM_EMAIL,
+          from: FROM_EMAIL,
           to: user.email,
           subject: "Verify Signup",
           html: tokenLink,
@@ -41,13 +41,23 @@ module.exports = function (app) {
 
       case "sendResetPwd":
         tokenLink = getLink("reset", user.resetToken);
-        email = {};
-        return sendEmail(email);
+        return sendEmail({
+          to: user.email,
+          from: FROM_EMAIL,
+          subject: "Sign in",
+          template: "signIn",
+          html: tokenLink,
+        });
 
       case "resetPwd":
         tokenLink = getLink("reset", user.resetToken);
-        email = {};
-        return sendEmail(email);
+        return sendEmail({
+          to: user.email,
+          from: FROM_EMAIL,
+          subject: "password has reset",
+          html:"Password has been reset"
+        });
+
 
       case "passwordChange":
         email = {};

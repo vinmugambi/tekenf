@@ -2,7 +2,6 @@ const { authenticate } = require("@feathersjs/authentication").hooks;
 const validate = require("../../hooks/validate");
 const verifyEmail = require("../../hooks/verifyEmail");
 const allowAnonymous = require("../../hooks/allowAnonymous");
-const sendApplicationId = require("../../hooks/sendApplicationId");
 
 module.exports = {
   before: {
@@ -35,7 +34,7 @@ module.exports = {
       },
     ],
     update: [],
-    patch: [sendApplicationId()],
+    patch: [],
     remove: [],
   },
 
