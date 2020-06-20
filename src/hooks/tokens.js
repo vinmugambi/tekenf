@@ -11,3 +11,9 @@ var _randomBytes = function _randomBytes(len) {
 exports.getLongToken = function (len) {
   return _randomBytes(len);
 };
+
+exports.getTokenLink= function (token, app){
+  const host= app.get("host");
+  const port=app.get("port") || null;
+  return port ?`http://${host}:${port}/magic?token=${token}`: `https://${host}/magic?token=${token}`;
+};
