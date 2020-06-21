@@ -1,14 +1,12 @@
 const Joi = require("@hapi/joi");
 const { BadRequest } = require("@feathersjs/errors");
+const bcrypt = require("bcryptjs");
 const { getLongToken, getTokenLink } = require("./tokens");
 
-module.exports= function (options={}){
-  return async context => {
+module.exports = function (options = {}) {
+  return async (context) => {
     if (
-      !(
-        context.data.action &&
-          context.data.action.trim() === "sendMagicLink"
-      )
+      !(context.data.action && context.data.action.trim() === "sendMagicLink")
     ) {
       return context;
     }
@@ -26,7 +24,7 @@ module.exports= function (options={}){
     let token = await getLongToken(16).catch((err) => {
       throw new Error("Unable to generate token", err);
     });
-    let link = getTokenLink(token, context.app);
+    let hashed = await bcrypt.hash(token, 10).catch(err=> {throw new Error("Error hashing password", err);});
     try {
       const { data } = await context.app
         .service("users")
@@ -37,14 +35,14 @@ module.exports= function (options={}){
       if (data && data.length == 1) {
         await context.app
           .service("users")
-          .patch(data[0]._id, { magic: token })
+          .patch(data[0]._id, { magic: hashed })
           .catch((err) => {
             throw new Error("Unable to patch user", err);
           });
       } else {
         await context.app
           .service("users")
-          .create({ email: value, magic: token })
+          .create({ email: value, magic: hashed })
           .catch((err) => {
             throw new Error("Unable to create user", err);
           });
@@ -52,23 +50,28 @@ module.exports= function (options={}){
     } catch (err) {
       throw new Error(err);
     } finally {
-      context.app.service("mailer").create({
-        from: "ford20@ethereal.com",
-        to: value,
-        subject: "Magin login link",
-        html: `<h4>Click the following link to login</h4>
+      let link = getTokenLink(token, context.app);
+      await context.app
+        .service("mailer")
+        .create({
+          from: "ford20@ethereal.com",
+          to: value,
+          subject: "Magin login link",
+          html: `<h4>Click the following link to login</h4>
               <p>Ignore this email if you did not attempt login.</p>
               <a href="${link}">${link}</a>`,
-      });
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
     }
 
     context.result = {
-      message: "A login link has been sent to your email.",
+      message: "A login link has been sent to your email",
       email: value,
       code: 201,
     };
 
     return context;
-    
   };
 };

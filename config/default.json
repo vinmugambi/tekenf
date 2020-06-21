@@ -12,7 +12,8 @@
     "secret": "5r+R5PyLs1L9E2t3ASSqYmsCBRQ=",
     "authStrategies": [
       "jwt",
-      "local"
+      "local",
+      "link"
     ],
     "jwtOptions": {
       "header": {
@@ -27,7 +28,7 @@
       "usernameField": "email",
       "passwordField": "password"
     },
-    "magic": {
+    "link": {
       "usernameField": "email",
       "passwordField": "magic"
     }

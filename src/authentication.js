@@ -6,7 +6,7 @@ const {
 const { LocalStrategy } = require("@feathersjs/authentication-local");
 const { expressOauth } = require("@feathersjs/authentication-oauth");
 const sendMagicLink = require("./hooks/sendMagicLink");
-
+const omit = require("lodash/omit");
 
 class AnonymousStrategy extends AuthenticationBaseStrategy {
   async authenticate(authentication, params) {
@@ -17,9 +17,21 @@ class AnonymousStrategy extends AuthenticationBaseStrategy {
 }
 
 class NoPasswordStrategy extends LocalStrategy {
-  async authenticate(authentication, params) {
+  async authenticate (data, params) {
+    const { passwordField, usernameField, entity } = this.configuration;
+    const username = data[usernameField];
+    const password = data[passwordField];
+    const result = await this.findEntity(username, omit(params, "provider"));
+
+    const user =await this.getEntity(result, params).catch(err=> {throw new Error("User not found", err);});
+    if (user) {
+      await this.app.service("users").patch(user._id, {magic: null}).catch(err=> {throw new Error("Unable to null magic", err);});
+    }
+    await this.comparePassword(result, password);
+
     return {
-      magic: true,
+      authentication: { strategy: this.name },
+      [entity]: user
     };
   }
 }
@@ -30,16 +42,22 @@ module.exports = (app) => {
   authentication.register("jwt", new JWTStrategy());
   authentication.register("local", new LocalStrategy());
   authentication.register("anonymous", new AnonymousStrategy());
-  authentication.register("magic", new NoPasswordStrategy());
+  authentication.register("link", new NoPasswordStrategy());
 
   app.use("/authentication", authentication);
   app.configure(expressOauth());
+
   const auth = app.service("authentication");
 
   auth.hooks({
     before: {
+      create: [sendMagicLink()],
+    },
+    after: {
       create: [
-        sendMagicLink()
+        async (context) => {
+          console.log(context.data);
+        },
       ],
     },
   });
