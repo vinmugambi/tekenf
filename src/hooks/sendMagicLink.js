@@ -51,7 +51,7 @@ module.exports = function (options = {}) {
       throw new Error(err);
     } finally {
       let link = getTokenLink(token, context.app);
-      await context.app
+      context.app
         .service("mailer")
         .create({
           from: "ford20@ethereal.com",
@@ -60,9 +60,6 @@ module.exports = function (options = {}) {
           html: `<h4>Click the following link to login</h4>
               <p>Ignore this email if you did not attempt login.</p>
               <a href="${link}">${link}</a>`,
-        })
-        .catch((err) => {
-          throw new Error(err);
         });
     }
 

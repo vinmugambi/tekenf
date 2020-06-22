@@ -1,6 +1,5 @@
 {
-  "host": "tekenf.herokuapp.com",
-  "port": "PORT",
+  "host": "teken-f.herokuapp.com",
   "public": "../public/",
   "paginate": {
     "default": 30,
@@ -12,7 +11,8 @@
     "secret": "5r+R5PyLs1L9E2t3ASSqYmsCBRQ=",
     "authStrategies": [
       "jwt",
-      "local"
+      "local",
+      "link"
     ],
     "jwtOptions": {
       "header": {
@@ -26,6 +26,10 @@
     "local": {
       "usernameField": "email",
       "passwordField": "password"
+    },
+    "link": {
+      "usernameField": "email",
+      "passwordField": "magic"
     }
   },
   "nedb": "../data"
