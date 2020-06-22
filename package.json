@@ -31,7 +31,7 @@
     "lint-fix": "eslint --fix src/. test/. --config .eslintrc.json",
     "dev": "nodemon src/",
     "start": "node src/",
-    "mocha": "npm run clean && mocha test/ --timeout 12000 --recursive --exit",
+    "mocha": "npm run clean && NODE_ENV=test mocha test/ --timeout 12000 --recursive --exit",
     "web": "node src/"
   },
   "standard": {

@@ -1,38 +1,25 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
-const validate = require("../../hooks/validate");
-const verifyEmail = require("../../hooks/verifyEmail");
 const allowAnonymous = require("../../hooks/allowAnonymous");
 
 module.exports = {
   before: {
-    // all: [ authenticate('jwt') ],
     all: [
       allowAnonymous(),
-      authenticate("jwt", "anonymous"),
-      (context) => {
-        console.log(context.params);
-        return context;
-      },
+      authenticate("jwt", "link"),
     ],
     find: [],
     get: [],
-    create: [validate()],
+    create: [],
     update: [],
-    patch: [verifyEmail()],
+    patch: [],
     remove: [],
   },
 
   after: {
-    // all: [populateUser()],
+    all: [],
     find: [],
     get: [],
-    create: [
-      async (context) => {
-        context.app
-          .service("verify")
-          .create({ visa: context.result._id, email: context.result.email });
-      },
-    ],
+    create: [],
     update: [],
     patch: [],
     remove: [],

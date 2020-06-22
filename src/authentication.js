@@ -16,7 +16,7 @@ class AnonymousStrategy extends AuthenticationBaseStrategy {
   }
 }
 
-class NoPasswordStrategy extends LocalStrategy {
+class MagicLinkStrategy extends LocalStrategy {
   async authenticate (data, params) {
     const { passwordField, usernameField, entity } = this.configuration;
     const username = data[usernameField];
@@ -42,7 +42,7 @@ module.exports = (app) => {
   authentication.register("jwt", new JWTStrategy());
   authentication.register("local", new LocalStrategy());
   authentication.register("anonymous", new AnonymousStrategy());
-  authentication.register("link", new NoPasswordStrategy());
+  authentication.register("link", new MagicLinkStrategy());
 
   app.use("/authentication", authentication);
   app.configure(expressOauth());
@@ -52,13 +52,6 @@ module.exports = (app) => {
   auth.hooks({
     before: {
       create: [sendMagicLink()],
-    },
-    after: {
-      create: [
-        async (context) => {
-          console.log(context.data);
-        },
-      ],
-    },
+    }
   });
 };
