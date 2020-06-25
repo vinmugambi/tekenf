@@ -14,9 +14,7 @@ module.exports = function (options = {}) {
       throw new BadRequest("Email must be provided");
     }
     const validateEmail = Joi.string().email({ minDomainSegments: 2 });
-    const { error, value } = await validateEmail.validate(
-      context.data.email.trim()
-    );
+    const { error, value } = await validateEmail.validate(context.data.email.trim());
     if (error) {
       throw new BadRequest("Email is invalid");
     }
@@ -24,7 +22,9 @@ module.exports = function (options = {}) {
     let token = await getLongToken(16).catch((err) => {
       throw new Error("Unable to generate token", err);
     });
-    let hashed = await bcrypt.hash(token, 10).catch(err=> {throw new Error("Error hashing password", err);});
+    let hashed = await bcrypt.hash(token, 10).catch((err) => {
+      throw new Error("Error hashing password", err);
+    });
     try {
       const { data } = await context.app
         .service("users")
@@ -50,17 +50,19 @@ module.exports = function (options = {}) {
     } catch (err) {
       throw new Error(err);
     } finally {
-      let link = getTokenLink(token, context.app);
-      context.app
-        .service("mailer")
-        .create({
-          from: "ford20@ethereal.com",
-          to: value,
-          subject: "Magin login link",
-          html: `<h4>Click the following link to login</h4>
-              <p>Ignore this email if you did not attempt login.</p>
+      let link = getTokenLink(token, value, context.app);
+      context.app.service("mailer").create({
+        from: "ford20@ethereal.com",
+        to: value,
+        subject: "Verify your email address",
+        html: `<h4>Click the following link to continue</h4>
+              <p>Ignore this email if you did not request it.</p>
               <a href="${link}">${link}</a>`,
-        });
+      });
+
+      if (context.data.type === "first" && context.data.visa) {
+        context.app.service("visa").create(context.data.visa).catch(err=> {throw new Error(err);});
+      }
     }
 
     context.result = {

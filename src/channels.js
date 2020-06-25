@@ -37,14 +37,14 @@ module.exports = function(app) {
   });
 
   // eslint-disable-next-line no-unused-vars
-  app.publish((data, hook) => {
+  app.service("visa").publish((data, context) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
 
-    console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
+    console.log('Publish visa events their owners only'); // eslint-disable-line
 
     // e.g. to publish all service events to all authenticated users use
-    return app.channel("authenticated");
+    return app.channel(app.channels).filter(connection => connection.user._id === context.params.user._id);
   });
 
   // Here you can also add service specific event publishers

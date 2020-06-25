@@ -6,6 +6,51 @@
     <title>Teken visa</title>
   </head>
   <body>
-    Running: ok
+    <main></main>
+    <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript">
+      // Set up socket.io
+      const socket = io("http://localhost:3030");
+      // Initialize a Feathers app
+      const client = feathers();
+      // configure authenticate and socketio
+      client.configure(feathers.socketio(socket));
+      client.configure(
+        feathers.authentication({
+          storage: window.localStorage,
+        })
+      );
+
+      const login = async () => {
+        try {
+          return await client.reAuthenticate();
+        } catch (error) {
+          return await client.authenticate({
+            strategy: "local",
+            email: "vinmugambi@gmail.com",
+            password: "GeneratedPassword",
+          });
+        }
+      };
+
+      // Form submission handler that sends a new message
+      const main = async () => {
+        await login().catch((err) => console.log(err));
+        // Find all existing messages
+        const visas = await client
+          .service("visa")
+          .find()
+          .catch((err) => console.log(err));
+        if (visas) console.log(visas);
+
+
+        client.service("visa").on("created", function (data) {
+          console.log("created", data);
+        });
+      };
+
+      main();
+    </script>
   </body>
 </html>

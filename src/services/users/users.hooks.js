@@ -1,22 +1,25 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
-const { iff, isProvider, when } = require("feathers-hooks-common");
+const {disallow,iff, isProvider, setNow, discard } = require("feathers-hooks-common");
 const {
   hashPassword,
   protect,
 } = require("@feathersjs/authentication-local").hooks;
 
+
+const preventChangesIfExternal = iff(isProvider("external"), discard("password", "magic","createdAt","updatedAt", "isAdmin"));
+
 module.exports = {
   before: {
-    all: [],
+    all: [authenticate("jwt")],
     find: [authenticate("jwt")],
     get: [authenticate("jwt")],
-    create: [hashPassword("password")],
-    update: [hashPassword("password"), authenticate("jwt")],
-    patch: [hashPassword("password"), authenticate("jwt")],
-    remove: [authenticate("jwt")],
+    create: [hashPassword("password"), setNow("createdAt")],
+    update: [disallow],
+    patch: [hashPassword("password"), authenticate("jwt"), preventChangesIfExternal, setNow("updatedAt")],
+    remove: [authenticate("jwt"), iff(context => !context.params.user.isAdmin, disallow())],
   },
   after: {
-    all: [when((hook) => hook.params.provider, protect("password", "magic"))],
+    all: [protect("password", "magic")],
     find: [],
     get: [iff(isProvider("external"))],
     create: [],

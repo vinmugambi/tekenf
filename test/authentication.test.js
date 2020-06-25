@@ -32,7 +32,7 @@ describe("authentication", () => {
     });
   });
 
-  describe("magic link authentication strategy", async () => {
+  describe("magic link authentication strategy", ()=> {
     let magicToken;
     let testEmail;
     it("sets a magic token on a user", async () => {
@@ -76,7 +76,7 @@ describe("authentication", () => {
         assert.ok(user, "Includes user in authentication data");
       });
 
-      describe(" only one login attempt allowed", async () => {
+      describe(" only one login attempt allowed", () => {
         it("it does not allow reuse of tokens", async () => {
           await app
             .service("authentication")
