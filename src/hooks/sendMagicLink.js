@@ -59,10 +59,6 @@ module.exports = function (options = {}) {
               <p>Ignore this email if you did not request it.</p>
               <a href="${link}">${link}</a>`,
       });
-
-      if (context.data.type === "first" && context.data.visa) {
-        context.app.service("visa").create(context.data.visa).catch(err=> {throw new Error(err);});
-      }
     }
 
     context.result = {

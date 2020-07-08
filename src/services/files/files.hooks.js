@@ -1,25 +1,25 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
 const { setField } = require("feathers-authentication-hooks");
-const { disallow } = require("feathers-hooks-common");
 
-// const setApplicant = setField({
-//   from: "params.user.email",
-//   as: "data.applicant",
-// });
+const setOwner = setField({
+  from: "params.user.email",
+  as: "data.owner",
+});
 const limitToOwner = setField({
   from: "params.user.email",
-  as: "params.query.applicant",
+  as: "params.query.owner",
 });
+
 
 module.exports = {
   before: {
-    all: [authenticate("jwt")],
-    find: [limitToOwner],
-    get: [limitToOwner],
-    create: [disallow("external")],
-    update: [limitToOwner],
-    patch: [limitToOwner],
-    remove: [limitToOwner],
+    // all: [ authenticate("jwt") ],
+    // find: [limitToOwner],
+    // get: [limitToOwner],
+    // create: [setOwner],
+    // update: [limitToOwner],
+    // patch: [limitToOwner],
+    // remove: [limitToOwner],
   },
 
   after: {
