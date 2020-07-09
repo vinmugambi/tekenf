@@ -10,7 +10,7 @@ const preventChangesIfExternal = iff(isProvider("external"), discard("password",
 
 module.exports = {
   before: {
-    all: [authenticate("jwt")],
+    all: [],
     find: [authenticate("jwt")],
     get: [authenticate("jwt")],
     create: [hashPassword("password"), setNow("createdAt")],

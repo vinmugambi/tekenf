@@ -22,7 +22,6 @@ class MagicLinkStrategy extends LocalStrategy {
     const { passwordField, usernameField, entity } = this.configuration;
     // decrypt email
     const username = decrypt(data[usernameField]);
-    console.log(username);
     const password = data[passwordField];
     const result = await this.findEntity(username, omit(params, "provider"));
 
@@ -67,7 +66,6 @@ module.exports = (app) => {
     after: {
       create: [
         async (context) => {
-          console.log(context.data);
           if (context.data.type === "first" && context.data.visa) {
             const visa = await context.app
               .service("visa")

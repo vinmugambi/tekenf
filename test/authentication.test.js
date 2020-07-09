@@ -63,7 +63,6 @@ describe("authentication", () => {
       }
 
       it("authenticates and sets user token", async () => {
-        console.log(testEmail, magicToken);
         const { user, accessToken } = await app
           .service("authentication")
           .create({

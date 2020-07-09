@@ -10,18 +10,16 @@ const limitToOwner = setField({
   as: "params.query.owner",
 });
 
-
 module.exports = {
   before: {
-    // all: [ authenticate("jwt") ],
-    // find: [limitToOwner],
-    // get: [limitToOwner],
-    // create: [setOwner],
-    // update: [limitToOwner],
-    // patch: [limitToOwner],
-    // remove: [limitToOwner],
+    all: [ authenticate("jwt") ],
+    find: [limitToOwner],
+    get: [limitToOwner],
+    create: [setOwner],
+    update: [limitToOwner],
+    patch: [limitToOwner],
+    remove: [limitToOwner],
   },
-
   after: {
     all: [],
     find: [],

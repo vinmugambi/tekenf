@@ -4,13 +4,14 @@ const createModel = require("../../models/files.model");
 const hooks = require("./files.hooks");
 
 const multer = require("multer");
+const { authenticate } = require("@feathersjs/express");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now()+"-"+file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
@@ -21,7 +22,6 @@ const upload = multer({
   },
 });
 
-
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
@@ -31,10 +31,12 @@ module.exports = function (app) {
   // Initialize our service with any options it requires
   app.use(
     "/files",
+    authenticate("jwt"),
     upload.single("file"),
     function (req, res, next) {
-      let file= req.file;
-      req.body={location: file.path, originalname: file.originalname };
+      if (req.method == ("POST" || "PATCH")) {
+        req.body = req.file;
+      }
       next();
     },
     new Files(options, app)

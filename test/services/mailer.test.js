@@ -20,17 +20,12 @@ describe("'mailer' service", () => {
   });
 
   it("sends an email using SMTP on create", async () => {
-    let email;
-    try {
-      email = await app.service("mailer").create({
-        from: "ford20@ethereal.com",
-        to: "vinmuga@gmail.com",
-        subject: "Testing Mailer service",
-        text: "it is working",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    let email = await app.service("mailer").create({
+      from: "ford20@ethereal.com",
+      to: "vinmuga@gmail.com",
+      subject: "Testing Mailer service",
+      text: "it is working",
+    });
     assert.ok(email, "Email sent");
   });
 
