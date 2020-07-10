@@ -14,7 +14,9 @@ module.exports = function (options = {}) {
       throw new BadRequest("Email must be provided");
     }
     const validateEmail = Joi.string().email({ minDomainSegments: 2 });
-    const { error, value } = await validateEmail.validate(context.data.email.trim());
+    const { error, value } = await validateEmail.validate(
+      context.data.email.trim()
+    );
     if (error) {
       throw new BadRequest("Email is invalid");
     }
@@ -33,19 +35,21 @@ module.exports = function (options = {}) {
           throw new Error("Unable to find user ", err);
         });
       if (data && data.length == 1) {
-        await context.app
+        let { _id } = await context.app
           .service("users")
           .patch(data[0]._id, { magic: hashed })
           .catch((err) => {
             throw new Error("Unable to patch user", err);
           });
+        context.result = { ...context.result, user: _id };
       } else {
-        await context.app
+        let { _id } = await context.app
           .service("users")
           .create({ email: value, magic: hashed })
           .catch((err) => {
             throw new Error("Unable to create user", err);
           });
+        context.result = { ...context.result, user: _id, first: true };
       }
     } catch (err) {
       throw new Error(err);
@@ -62,9 +66,9 @@ module.exports = function (options = {}) {
     }
 
     context.result = {
+      ...context.result,
       message: "A login link has been sent to your email",
       email: value,
-      code: 201,
     };
 
     return context;

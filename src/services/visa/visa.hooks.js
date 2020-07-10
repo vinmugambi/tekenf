@@ -1,13 +1,17 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
 const { setField } = require("feathers-authentication-hooks");
-const { disallow } = require("feathers-hooks-common");
+const { isProvider, setNow, iff, disallow } = require("feathers-hooks-common");
 
-// const setApplicant = setField({
-//   from: "params.user.email",
-//   as: "data.applicant",
-// });
+const setApplicant = iff(
+  isProvider("external"),
+  setField({
+    from: "params.user._id",
+    as: "data.applicant",
+  })
+);
+
 const limitToOwner = setField({
-  from: "params.user.email",
+  from: "params.user._id",
   as: "params.query.applicant",
 });
 
@@ -16,9 +20,9 @@ module.exports = {
     all: [authenticate("jwt")],
     find: [limitToOwner],
     get: [limitToOwner],
-    create: [disallow("external")],
-    update: [limitToOwner],
-    patch: [limitToOwner],
+    create: [setApplicant, setNow("createdAt")],
+    update: [disallow],
+    patch: [limitToOwner, setNow("updatedAt")],
     remove: [limitToOwner],
   },
 

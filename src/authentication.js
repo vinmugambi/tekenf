@@ -66,10 +66,10 @@ module.exports = (app) => {
     after: {
       create: [
         async (context) => {
-          if (context.data.type === "first" && context.data.visa) {
+          if (context.result.first && context.data.visa) {
             const visa = await context.app
               .service("visa")
-              .create({ ...context.data.visa, applicant: context.data.email })
+              .create({ ...context.data.visa, applicant: context.result.user})
               .catch((err) => {
                 throw new Error(err);
               });

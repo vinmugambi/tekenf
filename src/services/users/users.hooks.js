@@ -21,7 +21,7 @@ module.exports = {
   after: {
     all: [protect("password", "magic")],
     find: [],
-    get: [iff(isProvider("external"))],
+    get: [],
     create: [],
     update: [],
     patch: [],
