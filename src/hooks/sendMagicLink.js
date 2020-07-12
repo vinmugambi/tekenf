@@ -41,7 +41,17 @@ module.exports = function (options = {}) {
           .catch((err) => {
             throw new Error("Unable to patch user", err);
           });
-        context.result = { ...context.result, user: _id };
+        let first = false;
+        let visas = await context.app
+          .service("visa")
+          .find({ query: { applicant: _id } })
+          .catch((err) => {
+            throw new Error("Unable to find applications", err);
+          });
+        if (visas.data && visas.data.length ==0) {
+          first = true;
+        }
+        context.result = { ...context.result, user: _id, first };
       } else {
         let { _id } = await context.app
           .service("users")
@@ -49,6 +59,7 @@ module.exports = function (options = {}) {
           .catch((err) => {
             throw new Error("Unable to create user", err);
           });
+
         context.result = { ...context.result, user: _id, first: true };
       }
     } catch (err) {

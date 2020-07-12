@@ -7,6 +7,7 @@ const path = require("path");
 const multer = require("multer");
 const { authenticate } = require("@feathersjs/express");
 const uuid = require("uuid");
+const { PDFImage } = require("pdf-image");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -61,8 +62,14 @@ module.exports = function (app) {
         next();
       });
     },
-    function (req, res, next) {
+    async function (req, res, next) {
       if (req.method == ("POST" || "PATCH")) {
+        if (path.extname(req.file.filename) ===".pdf"){
+          const pdfThumb=new PDFImage(app.get("public")+"/uploads/"+req.file.filename);
+          const thumbnail = await pdfThumb.convertPage(0);
+
+          req.body={...req.body, thumbnail:  path.basename(thumbnail)};
+        }
         req.body = { ...req.body, filename: req.file.filename };
       }
       next();
