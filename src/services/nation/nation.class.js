@@ -1,37 +1,19 @@
 /* eslint-disable no-unused-vars */
-const india = require( "./india.js");
+const india = require("./india.js");
+const nations = {
+  india: india,
+  pakistan: "pakistan",
+};
 exports.Nation = class Nation {
-  constructor (options) {
+  constructor(options) {
     this.options = options || {};
   }
 
-  async find (params) {
-    return ["india"];
+  async find(params) {
+    return Object.keys(nations);
   }
 
-  async get (id, params) {
-    return {
-      id, text: `A new message with ID: ${id}!`
-    };
-  }
-
-  async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-
-    return data;
-  }
-
-  async update (id, data, params) {
-    return data;
-  }
-
-  async patch (id, data, params) {
-    return data;
-  }
-
-  async remove (id, params) {
-    return { id };
+  async get(id, params) {
+    return nations[id];
   }
 };
