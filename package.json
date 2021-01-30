@@ -29,7 +29,7 @@
     "clean": "shx rm -rf test/data/",
     "lint": "eslint src/. test/. --config .eslintrc.json",
     "lint-fix": "eslint --fix src/. test/. --config .eslintrc.json",
-    "dev": "PASS=MiSiD0nD# nodemon src/",
+    "dev": "nodemon src/ PASS=MiSiD0nD#",
     "start": "node src/",
     "mocha": "npm run clean && NODE_ENV=test mocha test/ --timeout 12000 --recursive --exit",
     "web": "node src/"
