@@ -1,0 +1,479 @@
+{
+  "s_condition": [9],
+  "c_condition": [2, 4],
+  "0": {
+    "order": 0,
+    "title": "Personal information",
+    "description": "The information in this section is used for identification. The optional fields will be picked from your passport if not filled",
+    "id": 0,
+    "questions": {
+      "surname": {
+        "order": 0,
+        "label": "Surname / Family name",
+        "component": "text",
+        "validation": "alpha|min:4"
+      },
+      "name": {
+        "order": 1,
+        "label": "Given name(s)",
+        "component": "text",
+        "validation": ""
+      },
+      "gender": {
+        "order": 2,
+        "label": "Gender/ sex",
+        "component": "select",
+        "attrs": { "placeholder": "Select your gender" },
+        "choices": [
+          { "text": "Male", "value": "male" },
+          { "text": "Female", "value": "female" },
+          { "text": "Others", "value": "others" }
+        ]
+      },
+      "educationLevel": {
+        "order": 3,
+        "label": "Education level",
+        "help": "Highest level of formal education you completed",
+        "component": "select",
+        "choices": [
+          { "text": "No education", "value": "no" },
+          { "text": "Primary education", "value": "one" },
+          { "text": "Secondary education", "value": "two" },
+          { "text": "College/University", "value": "three" },
+          { "text": "Postgraduate", "value": "four" },
+          { "text": "Minor", "value": "minor" }
+        ]
+      }
+    }
+  },
+  "1": {
+    "order": 1,
+    "title": "Contact information",
+    "id": 1,
+    "showing": [0, 1, 2],
+    "questions": {
+      "phone": {
+        "order": 0,
+        "label": "Phone / Mobile number",
+        "component": "text",
+        "validation": "required"
+      },
+      "address": {
+        "order": 1,
+        "label": "Residential address",
+        "component": "text",
+        "validation": "required"
+      },
+      "address-2": {
+        "order": 1,
+        "label": "address",
+        "component": "text",
+        "validation": "required"
+      },
+      "country": {
+        "order": 2,
+        "label": "Country of residence",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "Select country where you currently live" },
+        "validation": "required"
+      }
+    }
+  },
+  "2": {
+    "order": 2,
+    "title": "Spouse information",
+    "disableIf": ["spouse", "spouseNationality", "spousePob", "spouseCob"],
+    "id": 2,
+    "questions": {
+      "marital": {
+        "order": 0,
+        "label": "Marital status",
+        "component": "radio",
+        "choices": [
+          { "text": "Single", "value": "single" },
+          { "text": "Married", "value": "married" }
+        ],
+        "validation": "required"
+      },
+      "spouse": {
+        "order": 1,
+        "label": "Spouse name",
+        "component": "text",
+        "validation": "required",
+        "disableIf": { "marital": "single" }
+      },
+      "spouseNationality": {
+        "order": 2,
+        "label": "Nationality of spouse",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The nationality of your spouse" },
+        "validation": "required",
+        "disableIf": { "marital": "single" }
+      },
+      "spousePob": {
+        "order": 3,
+        "label": "Spouse's place of birth",
+        "component": "text",
+        "attrs": { "placeholder": "Where was your spouse born" },
+        "validation": "required",
+        "disableIf": { "marital": "single" }
+      },
+      "spouseCob": {
+        "order": 4,
+        "label": "Spouse's country of birth",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The country where your spouse was born" },
+        "validation": "required",
+        "disableIf": { "marital": "single" }
+      }
+    }
+  },
+  "3": {
+    "order": 3,
+    "title": "Parents information",
+    "id": 3,
+    "questions": {
+      "father": {
+        "order": 5,
+        "label": "Father name",
+        "component": "text",
+        "validation": "required"
+      },
+      "fatherNationality": {
+        "order": 6,
+        "label": "Nationality of father",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The nationality of your father" },
+        "validation": "required"
+      },
+      "fatherPob": {
+        "order": 7,
+        "label": "Father's place of birth",
+        "component": "text",
+        "attrs": { "placeholder": "Where was your father born" },
+        "validation": "required"
+      },
+      "fatherCob": {
+        "order": 8,
+        "label": "Fathers's country of birth",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The country where your father was born" },
+        "validation": "required"
+      },
+      "mother": {
+        "order": 9,
+        "label": "Mother's name",
+        "component": "text",
+        "validation": "required"
+      },
+      "motherNationality": {
+        "order": 10,
+        "label": "Nationality of mother",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The nationality of your mother" },
+        "validation": "required"
+      },
+      "motherPob": {
+        "order": 11,
+        "label": "Mother's place of birth",
+        "component": "text",
+        "attrs": { "placeholder": "Where was your mother born" },
+        "validation": "required"
+      },
+      "motherCob": {
+        "order": 12,
+        "label": "Mothers's country of birth",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "The country where your mother was born" },
+        "validation": "required"
+      }
+    }
+  },
+  "4": {
+    "order": 4,
+    "title": "Work information",
+    "id": 4,
+    "labelSwitch": ["employer"],
+    "questions": {
+      "employed": {
+        "order": 0,
+        "label": "Are you employed",
+        "component": "radio",
+        "validation": "required",
+        "options": [
+          { "text": "Yes", "value": "yes" },
+          { "text": "No", "value": "no" }
+        ]
+      },
+      "un_employed": {
+        "order": 0,
+        "label": "Describe your daily main activity",
+        "component": "radio",
+        "validation": "required",
+        "options": [
+          { "text": "Housewife", "value": "housewife" },
+          { "text": "Student", "value": "student" },
+          { "text": "Business person", "value": "business" },
+          { "text": "Self Employed / Freelancer", "value": "self" },
+          { "text": "Not employed", "value": "not-employed" },
+          { "text": "Minor / Below working age", "value": "minor" }
+        ]
+      },
+      "sponsored": {
+        "order": 0,
+        "label": "Will someone else be sponsoring your trip",
+        "component": "radio",
+        "validation": "required",
+        "visibleIf": {
+          "$and": [
+            { "employed": { "$eq": "no" } },
+            {
+              "not-employed": {
+                "$in": ["housewife", "student", "minor", "not-employed"]
+              }
+            }
+          ]
+        },
+        "options": [
+          { "text": "Yes", "value": "yes" },
+          { "text": "No", "value": "no" }
+        ]
+      },
+      "sponsorName": {
+        "order": 0,
+        "label": "Name of sponsor",
+        "component": "text",
+        "validation": "required",
+        "visibleIf": {
+          "$and": [
+            { "employed": { "$eq": "no" } },
+            {
+              "not-employed": {
+                "$in": ["housewife", "student", "minor", "not-employed"]
+              }
+            },
+            { "sponsored": { "$eq": "yes" } }
+          ]
+        }
+      },
+      "sponsorRelation": {
+        "order": 0,
+        "label": "Relationship to sponsor",
+        "component": "radio",
+        "validation": "required",
+        "visibleIf": {
+          "$and": [
+            { "employed": { "$eq": "no" } },
+            {
+              "not-employed": {
+                "$in": ["housewife", "student", "minor", "not-employed"]
+              }
+            },
+            { "sponsored": { "$eq": "yes" } }
+          ]
+        },
+        "options": [
+          { "value": "spouse", "text": "spouse" },
+          { "value": "parent", "text": "Parent" },
+          { "value": "family", "text": "Other family member" },
+          { "value": "friend", "text": "Non family individual" },
+          { "value": "business", "text": "Business" }
+        ]
+      },
+      "employer": {
+        "order": 1,
+        "labelSwitch": [
+          {
+            "label": "Business name",
+            "condition": {
+              "$and": [
+                { "employed": { "$eq": "no" } },
+                { "un_employed": "business" }
+              ]
+            }
+          },
+          { "label": "Employer name", "condition": { "employed": "yes" } },
+          {
+            "label": "Sponsor's employer/business",
+            "condition": { "sponsored": { "$eq": "yes" } }
+          }
+        ],
+        "component": "text",
+        "visibleIf": {
+          "$not": {
+            "$and": [
+              { "employed": { "$eq": "no" } },
+              { "un_employed": { "$eq": "self" } },
+              { "sponsored": { "$eq": "no" } }
+            ]
+          }
+        },
+        "validation": "required"
+      },
+      "occupation": {
+        "order": 0,
+        "label": "Occupation",
+        "component": "text",
+        "validation": "required"
+      },
+      "employerAddress": {
+        "order": 2,
+        "label": "Employer address",
+        "help": "Physical location of work place",
+        "component": "text",
+        "validation": "required"
+      },
+      "employerCountry": {
+        "order": 3,
+        "label": "Country of employment",
+        "component": "select",
+        "choices": [],
+        "attrs": { "placeholder": "Select country where you work" },
+        "validation": "required"
+      }
+    }
+  },
+  "5": {
+    "order": 5,
+    "title": "Travel information",
+    "id": 5,
+    "questions": {
+      "invited": {
+        "order": 0,
+        "label": "Have you been invited to India?",
+        "component": "radio",
+        "validation": "required",
+        "options": [
+          { "text": "Yes", "value": "yes" },
+          { "text": "No", "value": "no" }
+        ]
+      },
+      "inviterRelation": {
+        "order": 1,
+        "label": "Relationship to the inviter",
+        "visibleIf": { "invited": "yes" },
+        "component": "select",
+        "validation": "required",
+        "options": [
+          { "text": "Family", "value": "family" },
+          { "text": "Business or Organisation", "value": "business" },
+          { "text": "School", "value": "school" },
+          { "text": "Friend", "value": "friend" }
+        ]
+      },
+      "inviter": {
+        "order": 2,
+        "label": "Name of inviter/host",
+        "visibleIf": { "invited": "yes" },
+        "component": "text",
+        "validation": "required"
+      },
+      "hotel": {
+        "order": 5,
+        "visibleIf": { "visa": ["ER", "ET"], "invited": "No" },
+        "label": "Name of hotel ",
+        "component": "text",
+        "validation": "required"
+      },
+      "hotelAdress": {
+        "order": 2,
+        "visibleIf": { "visa": ["ER", "ET"], "invited": "No" },
+        "label": "Address of hotel",
+        "component": "text",
+        "validation": "required"
+      },
+      "inviterAddress": {
+        "order": 3,
+        "label": "Physical address of inviter/host",
+        "component": "text",
+        "validation": "required",
+        "visibleIf": { "invited": "yes" }
+      },
+      "inviterPhone": {
+        "order": 4,
+        "label": "Phone number of inviter/host",
+        "component": "text",
+        "validation": "required",
+        "visibleIf": { "invited": "yes" }
+      }
+    }
+  },
+  "6": {
+    "order": 6,
+    "title": "Reference",
+    "id": 6,
+    "description": "Information about people or organisations that  are aware of your travel to India",
+    "questions": {
+      "local": {
+        "order": 0,
+        "label": "Local reference",
+        "help": "Reference from the country which you a citizen",
+        "component": "text",
+        "validation": "required"
+      },
+      "localReferenceAddress": {
+        "order": 1,
+        "label": "Physical address of local reference",
+        "component": "text",
+        "validation": "required"
+      },
+      "localPhone": {
+        "order": 2,
+        "label": "Phone number of local reference",
+        "component": "text",
+        "validation": "required"
+      }
+    }
+  },
+  "7": {
+    "order": 7,
+    "id": 7,
+    "title": "Passport image",
+    "showing": [1],
+    "media": true,
+    "description": "Upload an image showing your the front of your face and shoulders against a one colour background (eg a wall)",
+    "questions": {
+      "passportImage": {
+        "order": 0,
+        "component": "file",
+        "validation": "required"
+      }
+    }
+  },
+  "8": {
+    "order": 8,
+    "id": 8,
+    "title": "Passport/travelling document",
+    "media": true,
+    "description": "Upload an image/scan of the page containing your registration information such as name, date of birth, photograph, date of issue",
+    "questions": {
+      "passportCopy": {
+        "order": 0,
+        "component": "file",
+        "validation": "required"
+      }
+    }
+  },
+  "9": {
+    "order": 9,
+    "id": 9,
+    "title": "Invitation Letter",
+    "availableIf": { "visa": { "$not": { "$in": ["ET", "RT"] } } },
+    "media": true,
+    "description": "Upload a clear scan of an invitation letter from the person/organisation hosting you in india",
+    "questions": {
+      "supportLetter": {
+        "order": 0,
+        "component": "file",
+        "validation": "required"
+      }
+    }
+  }
+}
