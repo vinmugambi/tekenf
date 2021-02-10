@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
-const india = require("./india.js");
+const india = require("./india/india.js");
+const criteria = require("./india/criteria.js");
 const nations = {
-  india: india,
+  india,
   pakistan: "pakistan",
+  criteria,
 };
 exports.Nation = class Nation {
   constructor(options) {
